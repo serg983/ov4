@@ -1,6 +1,7 @@
 const userForm = document.querySelector("#user_form")
 
 const forum = document.querySelector('#forum')
+const alertMsg = document.querySelector('.alert')
 
 console.log(userForm)
 console.dir(userForm)
@@ -9,23 +10,36 @@ userForm.addEventListener('submit', function(event) {
     console.log(event)
     event.preventDefault()
     const formData = new FormData(userForm)
+
+    if (!(userForm[0].value && userForm[1].value && userForm[2].value)) {
+        const errorMsg = (userForm[0].value ? '' : 'Введите имя<br>') + 
+            (userForm[1].value ? '' : 'Введите email<br>') +
+            (userForm[2].value ? '' : 'Введите сообщение<br>')       
+       alertMsg.innerHTML = errorMsg
+      // alertMsg.style.display = 'block'
+      alertMsg.classList.add('show')
+        return
+    }
+
+    alertMsg.innerHTML = ''
+    //alertMsg.style.display = 'none'
+    alertMsg.classList.remove('show')
+
     const userMessage = {
         userName: formData.get('user_name'),
         userEmail: formData.get('user_email'),
         userMessage: formData.get('user_message')
     }
-    // formData.set('user_name','')
-    // formData.set('user_email','')
-    // formData.set('user_message','')
-
+   
     userForm[0].value = ''
     userForm[1].value = ''
     userForm[2].value = ''
     
-        forum.innerHTML += `<div>
-        <span>${userMessage.userName}: </span>
-        <span>${userMessage.userMessage} </span>
-    </div>`
+    
+    forum.insertAdjacentHTML("afterbegin", `<li class="list-group-item">         
+            <span>${userMessage.userName}: </span>
+             <span>${userMessage.userMessage} </span>         
+     </li>`)
     
 })
 
